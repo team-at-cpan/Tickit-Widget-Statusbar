@@ -2,12 +2,12 @@ package Tickit::Widget::Statusbar;
 # ABSTRACT: Basic status bar definition
 use strict;
 use warnings;
-use parent qw(Tickit::Widget);
+use parent qw(Tickit::Widget::HBox);
+use curry::weak;
+use Tickit::Widget::Statusbar::Clock;
 
 our $VERSION = 0.001;
 
-use POSIX qw(strftime);
-use IO::Async::Timer::Periodic;
 use Scalar::Util ();
 
 =head1 NAME
@@ -31,45 +31,21 @@ sub new {
 	my $class = shift;
 	my %args = @_;
 	my $loop = delete $args{loop} or die 'no IO::Async::Loop provided';
+	my $pen = delete $args{pen} || Tickit::Pen->new(bg => 4, fg => 3, b => 1);
+	my $status = delete $args{status};
+	$status = Tickit::Widget::Static->new(align => 'left', valign => 'middle', text => $status // '') unless ref $status;
 	my $self = $class->SUPER::new(%args);
-	$self->{status_text} = "";
-	Scalar::Util::weaken($self->{loop} = $loop);
-
-	$self->{timer} = IO::Async::Timer::Periodic->new(
-		interval => 1.00,
-		on_tick => $self->sap(sub { my $self = shift; $self->redraw; })
-	);
-	$loop->add($self->{timer});
+	$self->set_pen($pen);
+	$self->add($self->{status} = $status, expand => 1);
+	$self->add($self->{clock} = Tickit::Widget::Statusbar::Clock->new(loop => $loop));
+	$self->{clock}->update_time;
 	return $self;
-}
-
-sub render {
-	my $self = shift;
-
-	my $win = $self->window or return;
-	$win->goto(0, 0);
-	my $blank = ($win->cols - 8) - length($self->{status_text});
-	$win->print($self->{status_text} . (' ' x $blank) . strftime("%H:%M:%S", localtime), bg => 4, fg => 3, b => 1);
 }
 
 sub update_status {
 	my $self = shift;
-	$self->{status_text} = shift;
-	$self->resized;
+	$self->{status}->set_text(shift);
 }
-
-sub window_gained {
-	my $self = shift;
-	$self->SUPER::window_gained(@_);
-	$self->timer->start if $self->timer;
-}
-sub timer { shift->{timer} }
-sub window_lost {
-	my $self = shift;
-	$self->SUPER::window_lost(@_);
-	$self->timer->stop if $self->timer;
-}
-sub sap { my ($self, $code) = @_; Scalar::Util::weaken $self; sub { $code->($self, @_) } }
 
 1;
 
