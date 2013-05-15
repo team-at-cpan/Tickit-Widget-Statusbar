@@ -5,6 +5,11 @@ use warnings;
 use parent qw(Tickit::Widget::HBox);
 use curry::weak;
 use Tickit::Widget::Statusbar::Clock;
+use Tickit::Style;
+
+style_definition base =>
+	fg => 'hi-yellow',
+	bg => 'blue';
 
 our $VERSION = 0.001;
 
@@ -30,21 +35,36 @@ sub cols  { 1 }
 sub new {
 	my $class = shift;
 	my %args = @_;
+
 	my $loop = delete $args{loop} or die 'no IO::Async::Loop provided';
-	my $pen = delete $args{pen} || Tickit::Pen->new(bg => 4, fg => 3, b => 1);
 	my $status = delete $args{status};
-	$status = Tickit::Widget::Static->new(align => 'left', valign => 'middle', text => $status // '') unless ref $status;
+	$status = Tickit::Widget::Static->new(
+		align => 'left',
+		valign => 'middle',
+		text => $status // ''
+	) unless ref $status;
+
 	my $self = $class->SUPER::new(%args);
-	$self->set_pen($pen);
 	$self->add($self->{status} = $status, expand => 1);
-	$self->add($self->{clock} = Tickit::Widget::Statusbar::Clock->new(loop => $loop));
+	$self->add(
+		$self->{clock} = Tickit::Widget::Statusbar::Clock->new(loop => $loop)
+	);
 	$self->{clock}->update_time;
 	return $self;
 }
 
+=head2 update_status
+
+Set current status. Takes a single parameter - the string to set the status
+to.
+
+Returns $self.
+
+=cut
+
 sub update_status {
 	my $self = shift;
-	$self->{status}->set_text(shift);
+	$self->{status}->set_text(shift // '');
 }
 
 1;
