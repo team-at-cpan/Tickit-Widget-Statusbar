@@ -11,6 +11,7 @@ sub new {
 	my $class = shift;
 	my %args = @_;
 	my $loop = delete $args{loop};
+	$args{text} = '';
 	my $self = $class->SUPER::new(%args);
 	$self->{timer} = IO::Async::Timer::Periodic->new(
 		interval => 1.00,
