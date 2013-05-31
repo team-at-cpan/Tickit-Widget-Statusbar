@@ -49,7 +49,6 @@ sub new {
 	$self->add(
 		$self->{clock} = Tickit::Widget::Statusbar::Clock->new(loop => $loop)
 	);
-	$self->{clock}->update_time;
 	return $self;
 }
 
