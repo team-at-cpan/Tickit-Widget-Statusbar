@@ -7,13 +7,7 @@ use curry::weak;
 use Tickit::Widget::Statusbar::Clock;
 use Tickit::Style;
 
-style_definition base =>
-	fg => 'hi-yellow',
-	bg => 'blue';
-
 our $VERSION = 0.001;
-
-use Scalar::Util ();
 
 =head1 NAME
 
@@ -24,6 +18,17 @@ Tickit::Widget::Statusbar
 =head1 DESCRIPTION
 
 =cut
+
+style_definition base =>
+	fg => 'hi-yellow',
+	bg => 'blue';
+
+style_definition base =>
+   spacing => 0;
+
+style_reshape_keys qw( spacing );
+
+use Scalar::Util ();
 
 =head1 METHODS
 

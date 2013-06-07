@@ -13,6 +13,8 @@ Integrated as part of the default status bar.
 
 =cut
 
+use constant CLEAR_BEFORE_RENDER => 0;
+
 use POSIX qw(strftime floor);
 use IO::Async::Timer::Periodic;
 use Time::HiRes ();
