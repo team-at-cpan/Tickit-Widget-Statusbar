@@ -11,7 +11,7 @@ our $VERSION = 0.001;
 
 =head1 NAME
 
-Tickit::Widget::Statusbar
+Tickit::Widget::Statusbar - provides a simple status bar implementation
 
 =head1 SYNOPSIS
 
@@ -37,24 +37,29 @@ use Scalar::Util ();
 sub lines { 1 }
 sub cols  { 1 }
 
+=head2 new
+
+
+
+=cut
+
 sub new {
 	my $class = shift;
 	my %args = @_;
 
-	my $loop = delete $args{loop} or die 'no IO::Async::Loop provided';
 	my $status = delete $args{status};
-	$status = Tickit::Widget::Static->new(
-		align => 'left',
-		valign => 'middle',
-		text => $status // ''
-	) unless ref $status;
-
 	my $self = $class->SUPER::new(%args);
 	$self->add($self->{status} = $status, expand => 1);
 	$self->add(
-		$self->{clock} = Tickit::Widget::Statusbar::Clock->new(loop => $loop)
+		$self->{clock} = Tickit::Widget::Statusbar::Clock->new,
 	);
 	return $self;
+}
+
+
+sub render_to_rb {
+	my ($self, $rb, $rect) = @_;
+	$rb->text_at(0, 0, $self->status, $self->widget_pen);
 }
 
 =head2 update_status

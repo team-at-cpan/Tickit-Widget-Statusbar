@@ -14,52 +14,23 @@ Integrated as part of the default status bar.
 =cut
 
 use constant CLEAR_BEFORE_RENDER => 0;
+use constant WIDGET_PEN_FROM_STYLE => 1;
+use constant CAN_FOCUS => 0;
 
 use POSIX qw(strftime floor);
-use IO::Async::Timer::Periodic;
 use Time::HiRes ();
+use curry;
 
 sub cols { 8 }
 
 sub lines { 1 }
 
-sub render {
+sub render_to_rb {
 	my $self = shift;
-	my %args = @_;
-	my $win = $self->window or return;
+	my $rb = shift;
 
-	$win->goto(0, 0);
-	$win->print(strftime $self->time_format, localtime);
-}
-
-=head2 new
-
-Takes the following named parameters:
-
-=over 4
-
-=item * loop - the L<IO::Async::Loop> for attaching the timer
-
-=back
-
-Returns $self.
-
-=cut
-
-sub new {
-	my $class = shift;
-	my %args = @_;
-	my $loop = delete $args{loop} or die "No loop provided";
-	my $self = $class->SUPER::new;
-	my $now = Time::HiRes::time;
-	$self->{timer} = IO::Async::Timer::Periodic->new(
-		interval => 1.00,
-		reschedule => 'skip',
-		first_interval => 0.01 + ($now - floor($now)),
-		on_tick => $self->curry::weak::redraw,
-	);
-	$loop->add($self->{timer});
-	$self
+	$rb->goto(0, 0);
+	$rb->text(strftime $self->time_format, localtime);
 }
 
 =head2 window_gained
@@ -73,32 +44,18 @@ Returns $self.
 sub window_gained {
 	my $self = shift;
 	$self->SUPER::window_gained(@_);
-	if(my $timer = $self->timer) {
-		$timer->stop if $timer->is_running;
-		my $now = Time::HiRes::time;
-		$timer->{first_interval} = 0.01 + ($now - floor($now));
-		$timer->start;
-	}
+	$self->update;
 }
 
-=head2 timer
-
-Accessor for the L<IO::Async::Timer::Periodic> object.
-
-=cut
-
-sub timer { shift->{timer} }
-
-=head2 window_lost
-
-Stop the timer if we lose our window.
-
-=cut
-
-sub window_lost {
+sub update {
 	my $self = shift;
-	$self->SUPER::window_lost(@_);
-	$self->timer->stop if $self->timer && $self->timer->is_running;
+	return unless my $win = $self->window;
+	my $now = Time::HiRes::time;
+	$self->redraw;
+	$win->tickit->timer(
+		after => (1.001 - ($now - floor($now))),
+		$self->curry::update
+	);
 }
 
 =head2 time_format
