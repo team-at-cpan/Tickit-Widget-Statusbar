@@ -1,5 +1,5 @@
 package Tickit::Widget::Statusbar;
-# ABSTRACT: Basic status bar definition
+# ABSTRACT: Terminal widget for showing status, CPU and memory
 use strict;
 use warnings;
 use parent qw(Tickit::ContainerWidget);
@@ -11,7 +11,18 @@ Tickit::Widget::Statusbar - provides a simple status bar implementation
 
 =head1 SYNOPSIS
 
+ my $statusbar = Tickit::Widget::Statusbar->new;
+ $statusbar->update_status('Ready to start');
+
 =head1 DESCRIPTION
+
+Provides a status bar, typically for use at the bottom of the terminal to
+indicate when we're busy doing something. You'll probably want this as the
+last widget in a L<Tickit::Widget::VBox> with C<expand> omitted or set to 0.
+
+Currently the statusbar contains the status text, a memory usage indicator (VSZ),
+CPU usage, and a clock. It should also allow progress bars, sparklines,
+and the ability to configure things, but as yet it does not.
 
 =cut
 
@@ -38,6 +49,8 @@ BEGIN {
 
 =head1 METHODS
 
+Not too many user-serviceable parts inside as yet. This is likely to change in future.
+
 =cut
 
 sub lines { 1 }
@@ -49,7 +62,7 @@ sub children {
 
 =head2 new
 
-
+Instantiates the status bar.
 
 =cut
 
@@ -61,7 +74,7 @@ sub new {
 	my $self = $class->SUPER::new(%args);
 	$self->{children} = [];
 	$self->{status} = $status;
-	
+
 	$self->add(
 		$self->{mem} = Tickit::Widget::Statusbar::Memory->new or die "no widget?"
 	);
@@ -80,6 +93,7 @@ sub add {
 	push @{$self->{children}}, $w;
 	$self->SUPER::add($w, @_);
 }
+
 sub children_changed {
 	my $self = shift;
 	return unless my $win = $self->window;
@@ -103,7 +117,6 @@ sub status { shift->{status} }
 
 sub render_to_rb {
 	my ($self, $rb, $rect) = @_;
-	# textwidth $self->status
 	my $txt = substrwidth $self->status, $rect->left, $rect->cols;
 	$rb->text_at($rect->top, $rect->left, $txt, $self->get_style_pen);
 	# $rb->erase_at($rect->top, $rect->left + textwidth($txt), $rect->cols - textwidth($txt), $self->get_style_pen);
@@ -125,7 +138,7 @@ sub update_status {
 	$self->{status} = shift // '';
 	$self->window->expose(Tickit::Rect->new(
 		left => 0,
-		top => 0, 
+		top => 0,
 		lines => 1,
 		cols => max(length $old_status, length $self->{status})
 	)) if $self->window;
@@ -141,5 +154,5 @@ Tom Molesworth <cpan@entitymodel.com>
 
 =head1 LICENSE
 
-Copyright Tom Molesworth 2011. Licensed under the same terms as Perl itself.
+Copyright Tom Molesworth 2011-2013. Licensed under the same terms as Perl itself.
 

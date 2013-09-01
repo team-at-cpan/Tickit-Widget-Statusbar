@@ -1,4 +1,4 @@
-#!/usr/bin/env perl 
+#!/usr/bin/env perl
 use strict;
 use warnings;
 use Tickit::Async;
@@ -11,8 +11,7 @@ my $tickit = Tickit::Async->new;
 my $vbox = Tickit::Widget::VBox->new;
 $vbox->add(Tickit::Widget::Static->new(text => 'status bar demo'), expand => 1);
 $vbox->add(my $status = Tickit::Widget::Statusbar->new(
-	loop => $loop,
-	status => Tickit::Widget::Static->new(text => 'custom status widget')
+	status => 'custom status widget'
 ));
 $tickit->set_root_widget($vbox);
 $loop->add($tickit);
