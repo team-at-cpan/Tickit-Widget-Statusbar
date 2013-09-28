@@ -3,7 +3,8 @@ package Tickit::Widget::Statusbar;
 use strict;
 use warnings;
 use parent qw(Tickit::ContainerWidget);
-our $VERSION = 0.001;
+
+our $VERSION = 0.002;
 
 =head1 NAME
 
@@ -36,7 +37,6 @@ use Tickit::Utils qw(substrwidth textwidth);
 use Scalar::Util ();
 
 use constant WIDGET_PEN_FROM_STYLE => 1;
-use constant CAN_FOCUS => 0;
 
 BEGIN {
 	style_definition base =>
@@ -105,6 +105,12 @@ sub children_changed {
 		$child->set_window($sub);
 		$x -= $child->cols + $self->get_style_values('spacing');
 	}
+}
+
+sub reshape {
+	my $self = shift;
+	$self->children_changed;
+	$self->SUPER::reshape(@_);
 }
 
 sub window_gained {
