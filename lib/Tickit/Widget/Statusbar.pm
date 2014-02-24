@@ -28,6 +28,7 @@ and the ability to configure things, but as yet it does not.
 =cut
 
 use curry::weak;
+use Tickit::Widget::Statusbar::Icon;
 use Tickit::Widget::Statusbar::Clock;
 use Tickit::Widget::Statusbar::CPU;
 use Tickit::Widget::Statusbar::Memory;
@@ -90,8 +91,18 @@ sub new {
 sub add {
 	my $self = shift;
 	my $w = shift;
-	push @{$self->{children}}, $w;
+	unshift @{$self->{children}}, $w;
 	$self->SUPER::add($w, @_);
+}
+
+sub add_icon {
+	my $self = shift;
+	my $txt = shift;
+	my $w = Tickit::Widget::Statusbar::Icon->new;
+	$w->set_icon($txt);
+	unshift @{$self->{children}}, $w;
+	$self->SUPER::add($w, @_);
+	$w
 }
 
 sub children_changed {
