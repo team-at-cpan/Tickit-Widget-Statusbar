@@ -4,5 +4,8 @@ Revision history for {{$dist->name}}
 	Bugs fixed:
 	* Redraw after reshape
 
+	Dependency fixes:
+	* Tickit::Widget, add in Tickit::Widget::Progressbar as well
+
 0.001     2013-09-01 03:56:00 Europe/London
 	Initial CPAN release
