@@ -33,15 +33,12 @@ sub new {
 	my $self = shift->SUPER::new;
 	my %args = @_;
 	$self->set_icon(delete $args{icon}) if exists $args{icon};
-	$self->set_(delete $args{icon}) if exists $args{icon};
 	$self;
 }
 
 sub cols { 1 }
 
 sub lines { 1 }
-
-sub icon { shift->{icon} }
 
 sub icon { shift->{icon} }
 
