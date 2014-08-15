@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use parent qw(Tickit::ContainerWidget);
 
-our $VERSION = 0.002;
+our $VERSION = 0.003;
 
 =head1 NAME
 
@@ -42,7 +42,8 @@ use constant WIDGET_PEN_FROM_STYLE => 1;
 BEGIN {
 	style_definition base =>
 		fg => 'white',
-		bg => 232,
+		bg => 236,
+		b => 0,
 		spacing => 1;
 
 	style_reshape_keys qw(spacing);
