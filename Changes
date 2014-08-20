@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.003     2014-08-20 20:59:21+01:00 Europe/London
 	New features:
 	* ->update_status now accepts a String::Tagged object
 
