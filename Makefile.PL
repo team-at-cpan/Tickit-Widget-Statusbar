@@ -23,6 +23,7 @@ my %WriteMakefileArgs = (
     "Format::Human::Bytes" => 0,
     "Memory::Usage" => 0,
     "Proc::CPUUsage" => 0,
+    "String::Tagged" => "0.09",
     "Tickit" => "0.46",
     "Tickit::Widget" => 0,
     "Tickit::Widget::Progressbar" => "0.100",
@@ -39,7 +40,7 @@ my %WriteMakefileArgs = (
     "Test::More" => "0.98",
     "Test::Refcount" => "0.07"
   },
-  "VERSION" => "0.002",
+  "VERSION" => "0.003",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -53,6 +54,7 @@ my %FallbackPrereqs = (
   "IPC::Open3" => 0,
   "Memory::Usage" => 0,
   "Proc::CPUUsage" => 0,
+  "String::Tagged" => "0.09",
   "Test::CheckDeps" => "0.010",
   "Test::Fatal" => "0.010",
   "Test::More" => "0.98",
