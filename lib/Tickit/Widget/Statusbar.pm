@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use parent qw(Tickit::ContainerWidget);
 
-our $VERSION = 0.002;
+our $VERSION = 0.003;
 
 =head1 NAME
 
@@ -35,7 +35,8 @@ use Tickit::Widget::Statusbar::Memory;
 use Tickit::Style;
 use List::Util qw(max);
 use Tickit::Utils qw(substrwidth textwidth);
-use Scalar::Util ();
+use Scalar::Util qw(blessed);
+use String::Tagged;
 
 use constant WIDGET_PEN_FROM_STYLE => 1;
 
@@ -135,10 +136,24 @@ sub status { shift->{status} }
 
 sub render_to_rb {
 	my ($self, $rb, $rect) = @_;
+
 	my $txt = substrwidth $self->status, $rect->left, $rect->cols;
-	$rb->text_at($rect->top, $rect->left, $txt, $self->get_style_pen);
+	my $base_pen = $self->get_style_pen;
+	if(defined(my $v = $self->status)) {
+		$rb->goto($rect->top, $rect->left);
+		$v->iter_substr_nooverlap(sub {
+			my ($substr, %tags) = @_;
+			my $pen = Tickit::Pen::Immutable->new(
+				$base_pen->getattrs,
+				%tags
+			);
+			$rb->text($substr, $pen);
+		});
+	}
+
+#	$rb->text_at($rect->top, $rect->left, $txt, $self->get_style_pen);
 	# $rb->erase_at($rect->top, $rect->left + textwidth($txt), $rect->cols - textwidth($txt), $self->get_style_pen);
-	$rb->text_at($rect->top, $rect->left + textwidth($txt), ' ' x ($rect->cols - textwidth($txt)));
+#	$rb->text_at($rect->top, $rect->left + textwidth($txt), ' ' x ($rect->cols - textwidth($txt)));
 }
 
 =head2 update_status
@@ -154,11 +169,16 @@ sub update_status {
 	my $self = shift;
 	my $old_status = $self->{status};
 	$self->{status} = shift // '';
+	$self->{status} = String::Tagged->new($self->{status}) unless blessed $self->{status};
+	$self->{status}->merge_tags(sub {
+		my ($k, $left, $right) = @_;
+		return $left eq $right;
+	});
 	$self->window->expose(Tickit::Rect->new(
 		left => 0,
 		top => 0,
 		lines => 1,
-		cols => max(textwidth $old_status, textwidth $self->{status})
+		cols => max(textwidth($old_status->str), textwidth($self->{status}->str))
 	)) if $self->window;
 }
 
@@ -172,5 +192,5 @@ Tom Molesworth <cpan@perlsite.co.uk>
 
 =head1 LICENSE
 
-Copyright Tom Molesworth 2011-2013. Licensed under the same terms as Perl itself.
+Copyright Tom Molesworth 2011-2014. Licensed under the same terms as Perl itself.
 
