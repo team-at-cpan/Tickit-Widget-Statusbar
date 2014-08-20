@@ -158,7 +158,7 @@ sub update_status {
 		left => 0,
 		top => 0,
 		lines => 1,
-		cols => max(length $old_status, length $self->{status})
+		cols => max(textwidth $old_status, textwidth $self->{status})
 	)) if $self->window;
 }
 
