@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use parent qw(Tickit::ContainerWidget);
 
-our $VERSION = 0.003;
+our $VERSION = '0.004';
 
 =head1 NAME
 
@@ -76,7 +76,7 @@ sub new {
 	my $status = delete($args{status}) // '';
 	my $self = $class->SUPER::new(%args);
 	$self->{children} = [];
-	$self->{status} = $status;
+	$self->update_status($status);
 
 	$self->add(
 		$self->{mem} = Tickit::Widget::Statusbar::Memory->new or die "no widget?"

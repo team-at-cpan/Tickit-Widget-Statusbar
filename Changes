@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+	Bugs fixed:
+	* Status is set correctly on instantiation
 
 0.003     2014-08-20 20:59:21+01:00 Europe/London
 	New features:
