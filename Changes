@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+	No new features.
+
 	Bugs fixed:
 	* Status is set correctly on instantiation
 
