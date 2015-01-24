@@ -1,6 +1,8 @@
 package Tickit::Widget::Statusbar::CPU;
+
 use strict;
 use warnings;
+
 use parent qw(Tickit::Widget);
 
 =head1 NAME

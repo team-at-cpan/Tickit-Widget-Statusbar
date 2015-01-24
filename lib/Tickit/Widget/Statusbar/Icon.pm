@@ -1,6 +1,8 @@
 package Tickit::Widget::Statusbar::Icon;
+
 use strict;
 use warnings;
+
 use utf8;
 use parent qw(Tickit::Widget);
 

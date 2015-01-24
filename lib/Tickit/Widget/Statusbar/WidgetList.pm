@@ -1,4 +1,5 @@
 package Tickit::Widget::Statusbar::WidgetList;
+
 use strict;
 use warnings;
 
