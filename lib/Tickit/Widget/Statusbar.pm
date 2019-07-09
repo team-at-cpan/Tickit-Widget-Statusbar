@@ -137,10 +137,10 @@ sub status { shift->{status} }
 sub render_to_rb {
 	my ($self, $rb, $rect) = @_;
 
-	my $txt = substrwidth $self->status, $rect->left, $rect->cols;
 	my $base_pen = $self->get_style_pen;
+
+	$rb->goto(0, 0);
 	if(defined(my $v = $self->status)) {
-		$rb->goto($rect->top, $rect->left);
 		$v->iter_substr_nooverlap(sub {
 			my ($substr, %tags) = @_;
 			my $pen = Tickit::Pen::Immutable->new(
@@ -151,9 +151,7 @@ sub render_to_rb {
 		});
 	}
 
-#	$rb->text_at($rect->top, $rect->left, $txt, $self->get_style_pen);
-	# $rb->erase_at($rect->top, $rect->left + textwidth($txt), $rect->cols - textwidth($txt), $self->get_style_pen);
-#	$rb->text_at($rect->top, $rect->left + textwidth($txt), ' ' x ($rect->cols - textwidth($txt)));
+	$rb->erase_to($self->window->cols, $base_pen);
 }
 
 =head2 update_status
