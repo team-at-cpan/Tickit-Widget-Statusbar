@@ -112,6 +112,9 @@ sub children_changed {
 	return unless my $win = $self->window;
 	my $x = $win->cols;
 	for my $child (reverse $self->children) {
+		my $childwin = $child->window;
+		$childwin->close if $childwin;
+
 		my $sub = $win->make_sub(
 			0, $x - $child->cols, 1, $child->cols
 		);
