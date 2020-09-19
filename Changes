@@ -1,6 +1,13 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    No new features.
+
+    Bugs fixed:
+
+    - Proc::CPUUsage fails tests, switching to BSD::Resource instead
+    - Window handling changes in recent Tickit versions were causing segfaults,
+    seems to be caused by creating new windows instead of changing geometry
 
 0.004     2015-01-24 08:58:54+00:00 Europe/London
 	No new features.
