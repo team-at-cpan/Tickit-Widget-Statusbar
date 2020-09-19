@@ -23,15 +23,29 @@ use POSIX qw(strftime floor);
 use Time::HiRes ();
 use List::Util qw(min max sum);
 use curry;
-use Proc::CPUUsage;
+use BSD::Resource qw(getrusage);
 
 sub cols { 4 }
 
 sub lines { 1 }
 
 sub usage {
-	my $cpu = (shift->{usage} ||= Proc::CPUUsage->new);
-	min 100, max 0, 100 * $cpu->usage
+    my ($self) = @_;
+    my $now = Time::HiRes::time();
+    my $usage = 0.0;
+    my $cpu = getrusage();
+    if(defined $self->{start}) {
+        my $elapsed = $now - $self->{start};
+        $usage = min 100, max 0, 100 * (
+            ($cpu->stime - $self->{stime}) + ($cpu->utime - $self->{utime})
+        ) / ($elapsed || -1);
+    } else {
+        $self->{start} = $now;
+        $self->{utime} = $cpu->utime;
+        $self->{stime} = $cpu->stime;
+    }
+    $self->{last_update} = $now;
+    return $usage;
 }
 
 sub render_to_rb {
