@@ -25,6 +25,7 @@ use List::Util qw(min max sum);
 use curry;
 use Memory::Usage;
 use Format::Human::Bytes;
+use Tickit::Utils qw(textwidth);
 
 sub cols { 7 }
 
@@ -36,7 +37,6 @@ sub usage {
 	return $mem->state->[-1][2] * 1024;
 }
 
-use Tickit::Utils qw(textwidth);
 sub render_to_rb {
 	my $self = shift;
 	my $rb = shift;
