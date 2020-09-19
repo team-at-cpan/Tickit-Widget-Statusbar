@@ -3,6 +3,9 @@ package Tickit::Widget::Statusbar::WidgetList;
 use strict;
 use warnings;
 
+# VERSION
+# AUTHORITY
+
 =head1 NAME
 
 Tickit::Widget::Statusbar::WidgetList

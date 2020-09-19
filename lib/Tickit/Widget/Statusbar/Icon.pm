@@ -3,8 +3,12 @@ package Tickit::Widget::Statusbar::Icon;
 use strict;
 use warnings;
 
-use utf8;
+# VERSION
+# AUTHORITY
+
 use parent qw(Tickit::Widget);
+
+use utf8;
 
 =encoding utf8
 
@@ -25,17 +29,17 @@ use constant CAN_FOCUS => 0;
 use Tickit::Style;
 
 BEGIN {
-	style_definition ':error' =>
-		fg => 196;
-	style_definition ':ok' =>
-		fg => 42;
+    style_definition ':error' =>
+        fg => 196;
+    style_definition ':ok' =>
+        fg => 42;
 }
 
 sub new {
-	my $self = shift->SUPER::new;
-	my %args = @_;
-	$self->set_icon(delete $args{icon}) if exists $args{icon};
-	$self;
+    my $self = shift->SUPER::new;
+    my %args = @_;
+    $self->set_icon(delete $args{icon}) if exists $args{icon};
+    $self;
 }
 
 sub cols { 1 }
@@ -45,18 +49,18 @@ sub lines { 1 }
 sub icon { shift->{icon} }
 
 sub set_icon {
-	my $self = shift;
-	$self->{icon} = shift;
-	$self->redraw;
-	$self
+    my $self = shift;
+    $self->{icon} = shift;
+    $self->redraw;
+    $self
 }
 
 sub render_to_rb {
-	my $self = shift;
-	my $rb = shift;
+    my $self = shift;
+    my $rb = shift;
 
-	$rb->goto(0, 0);
-	$rb->text($self->icon);
+    $rb->goto(0, 0);
+    $rb->text($self->icon);
 }
 
 1;
