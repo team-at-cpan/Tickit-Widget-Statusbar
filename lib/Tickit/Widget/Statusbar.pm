@@ -112,10 +112,17 @@ sub children_changed {
 	return unless my $win = $self->window;
 	my $x = $win->cols;
 	for my $child (reverse $self->children) {
-		my $sub = $win->make_sub(
-			0, $x - $child->cols, 1, $child->cols
-		);
-		$child->set_window($sub);
+        if($child->window) {
+            # Tickit::Window
+            $child->window->change_geometry(
+                0, $x - $child->cols, 1, $child->cols
+            );
+        } else {
+            my $sub = $win->make_sub(
+                0, $x - $child->cols, 1, $child->cols
+            );
+            $child->set_window($sub);
+        }
 		$x -= $child->cols + $self->get_style_values('spacing');
 	}
 }
