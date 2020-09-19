@@ -112,9 +112,9 @@ sub children_changed {
 	return unless my $win = $self->window;
 	my $x = $win->cols;
 	for my $child (reverse $self->children) {
-        if($child->window) {
+        if(my $sub = $child->window) {
             # Tickit::Window
-            $child->window->change_geometry(
+            $sub->change_geometry(
                 0, $x - $child->cols, 1, $child->cols
             );
         } else {
