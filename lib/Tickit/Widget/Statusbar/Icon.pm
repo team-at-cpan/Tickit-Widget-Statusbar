@@ -6,7 +6,8 @@ use warnings;
 # VERSION
 # AUTHORITY
 
-use parent qw(Tickit::Widget);
+use Object::Pad;
+class Tickit::Widget::Statusbar::Icon :isa(Tickit::Widget);
 
 use utf8;
 
@@ -35,30 +36,24 @@ BEGIN {
         fg => 42;
 }
 
-sub new {
-    my $self = shift->SUPER::new;
-    my %args = @_;
+BUILD (%args) {
     $self->set_icon(delete $args{icon}) if exists $args{icon};
     $self;
 }
 
-sub cols { 1 }
+method cols { 1 }
 
-sub lines { 1 }
+method lines { 1 }
 
-sub icon { shift->{icon} }
+method icon { $self->{icon} }
 
-sub set_icon {
-    my $self = shift;
-    $self->{icon} = shift;
+method set_icon ($icon) {
+    $self->{icon} = $icon;
     $self->redraw;
     $self
 }
 
-sub render_to_rb {
-    my $self = shift;
-    my $rb = shift;
-
+method render_to_rb ($rb, @) {
     $rb->goto(0, 0);
     $rb->text($self->icon);
 }
