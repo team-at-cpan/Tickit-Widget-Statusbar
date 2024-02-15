@@ -1,0 +1,46 @@
+NAME
+
+    Tickit::Widget::Statusbar - provides a simple status bar implementation
+
+SYNOPSIS
+
+     my $statusbar = Tickit::Widget::Statusbar->new;
+     $statusbar->update_status('Ready to start');
+
+DESCRIPTION
+
+    Provides a status bar, typically for use at the bottom of the terminal
+    to indicate when we're busy doing something. You'll probably want this
+    as the last widget in a Tickit::Widget::VBox with expand omitted or set
+    to 0.
+
+    Currently the statusbar contains the status text, a memory usage
+    indicator (VSZ), CPU usage, and a clock. It should also allow progress
+    bars, sparklines, and the ability to configure things, but as yet it
+    does not.
+
+METHODS
+
+    Not too many user-serviceable parts inside as yet. This is likely to
+    change in future.
+
+ new
+
+    Instantiates the status bar.
+
+ update_status
+
+    Set current status. Takes a single parameter - the string to set the
+    status to.
+
+    Returns $self.
+
+AUTHOR
+
+    Tom Molesworth <TEAM@cpan.org>
+
+LICENSE
+
+    Copyright Tom Molesworth 2011-2020. Licensed under the same terms as
+    Perl itself.
+
